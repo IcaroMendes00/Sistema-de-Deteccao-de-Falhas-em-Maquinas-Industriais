@@ -92,7 +92,7 @@ O sistema processa continuamente os dados do acelerômetro e realiza inferência
 
 ### 5.2. Observação
 
-A latência pode ser reduzida otimizando o código para melhor uso da DMA e interrupções.
+A latência pode ser reduzida otimizando o código para uso do DMA e interrupções.
 
 ---
 
@@ -123,7 +123,7 @@ Este projeto demonstrou que aprendizado de máquina embarcado pode ser uma solu�
 3. **Compile e grave o firmware** no microcontrolador;
 4. **Abra o monitor serial (115200 bps)** para visualizar os resultados.
 
-### 7.2. Coletar e Processar Dados (Python)
+Coleta e Processamento dos Dados (Python)
 
 Para coletar novos dados e formatá-los no formato ideal em um arquivo .csv para o NanoEdge AI:
 
