@@ -39,8 +39,11 @@ A coleta de dados foi realizada através do MPU6050, operando via **I2C a 400 kH
 Os dados foram coletados no seguinte formato:
 
 **linha 1** - x0 y0 z0 x1 y1 z1 ... x255 y255 z255 
+
 **linha 2** - x0 y0 z0 x1 y1 z1 ... x255 y255 z255 
+
 ... 
+
 **linha N** - x0 y0 z0 x1 y1 z1 ... x255 y255 z255
 
 
