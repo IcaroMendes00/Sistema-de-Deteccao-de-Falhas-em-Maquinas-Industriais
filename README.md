@@ -1,0 +1,1 @@
+# Sistema-de-Deteccao-de-Falhas-em-Maquinas-Industriais
