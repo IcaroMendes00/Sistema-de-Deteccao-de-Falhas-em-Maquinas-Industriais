@@ -92,23 +92,18 @@ void MPU6050_Init(void)
 	uint8_t check;
 	uint8_t Data;
 
-	// check device ID WHO_AM_I
 	HAL_I2C_Mem_Read (&hi2c1, MPU6050_ADDR, 0x75, 1, &check, 1, 1000);
-	if (check == 0x68)  // 0x68 will be returned by the sensor if everything goes well
+	if (check == 0x68) 
 	{
-		// power management register 0X6B we should write all 0's to wake the sensor up
 		Data = 0;
 		HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR, 0x6B, 1,&Data, 1, 1000);
 
-		// Set DATA RATE of 1KHz by writing SMPLRT_DIV register
 		Data = 0x07;
 		HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR, 0x19, 1, &Data, 1, 1000);
 
-		// Set Gyroscopic configuration in GYRO_CONFIG Register
-		Data = 0x00;  // XG_ST=0,YG_ST=0,ZG_ST=0, FS_SEL=0 -> ± 250 ̐/s
+		Data = 0x00;
 		HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR, 0x1B, 1, &Data, 1, 1000);
 
-		// Set accelerometer configuration in ACCEL_CONFIG Register
 		Data = 0x00;  // XA_ST=0,YA_ST=0,ZA_ST=0, FS_SEL=0 -> ± 2g
 		HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR, 0x1C, 1, &Data, 1, 1000);
 	}
@@ -119,17 +114,11 @@ void MPU6050_Read_Accel(void)
 {
 	uint8_t Rec_Data[6];
 
-	// Read 6 BYTES of data starting from ACCEL_XOUT_H (0x3B) register
 	HAL_I2C_Mem_Read (&hi2c1, MPU6050_ADDR, 0x3B, 1, Rec_Data, 6, 1000);
 
 	Accel_X_RAW = (int16_t)(Rec_Data[0] << 8 | Rec_Data [1]);
 	Accel_Y_RAW = (int16_t)(Rec_Data[2] << 8 | Rec_Data [3]);
 	Accel_Z_RAW = (int16_t)(Rec_Data[4] << 8 | Rec_Data [5]);
-
-	// convert the RAW values into acceleration in 'g'
-	// we have to divide according to the Full scale value set in FS_SEL
-	// I have configured FS_SEL = 0. So I am dividing by 16384.0
-	// for more details check ACCEL_CONFIG Register
 
 	Ax = (float)Accel_X_RAW/16384.0;
 	Ay = (float)Accel_Y_RAW/16384.0;
@@ -141,13 +130,13 @@ void fill_buffer(float input_buffer[])
     uint16_t i;
     for (i = 0; i < (DATA_INPUT_USER * AXIS_NUMBER); i += 3)
     {
-        MPU6050_Read_Accel();  // Lê os valores do acelerômetro
-
+        MPU6050_Read_Accel();
+	    
         input_buffer[i] = Ax;     // X
         input_buffer[i + 1] = Ay; // Y
         input_buffer[i + 2] = Az; // Z
 
-        HAL_Delay(10);  // Pequeno delay para controle da taxa de amostragem
+        HAL_Delay(10);
     }
 }
 
@@ -207,6 +196,7 @@ int main(void)
 
   char test_msg[] = "MPU6050 Inicializado\nIniciando o modelo de deteccao...\n";
   HAL_UART_Transmit(&huart1, (uint8_t*)test_msg, strlen(test_msg), HAL_MAX_DELAY);
+	
   // Inicialização do modelo NanoEdge AI
   enum neai_state error_code;
   error_code = neai_anomalydetection_init();
@@ -232,7 +222,7 @@ int main(void)
 	  enum neai_state detect_result = neai_anomalydetection_detect(input_user_buffer, &similarity);
 	  if (detect_result != NEAI_OK)
 	  {
-		  char error_msg[] = "Erro na deteccao de anomalias!\n";
+	      char error_msg[] = "Erro na deteccao de anomalias!\n";
 	      HAL_UART_Transmit(&huart1, (uint8_t*)error_msg, strlen(error_msg), HAL_MAX_DELAY);
 	      Error_Handler();
 	  }
